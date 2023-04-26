@@ -1,0 +1,30 @@
+name: workflow_A2
+
+on:
+  workflow_dispatch:
+     inputs:
+      owner:
+        description: 'GitHub Account Owner'
+        required: true
+        default: 'MadhusudanItorix'
+
+      repo:
+        description: 'repo-name'
+        required: true
+        default: 'Repo_B' 
+    
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger Another Workflow
+      uses: octokit/request-action@v2.x
+      with:
+        route: 'POST /repos/:owner/:repo/dispatches'
+        owner: ${{github.event.inputs.owner}}
+        repo: ${{github.event.inputs.repo}}
+        event_type: 'workflow_dispatch'
+        client_payload: '{}'
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTIONS_KEY }}
